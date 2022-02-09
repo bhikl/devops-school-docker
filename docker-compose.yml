@@ -1,0 +1,44 @@
+version: '2.4'
+services:
+
+  apache:
+    image: localhost:5000/my-apache:0.2
+    container_name: my-apache-app
+    volumes:
+      - app-data:/usr/local/apache2/htdocs
+    ports:
+      - "8080:80"
+    networks:
+     - apache-network
+    cpu_count: 1
+    cpus: 0.1
+    cpu_percent: 10
+    mem_limit: 50m
+
+  nginx:
+    restart: "no"
+    image: localhost:5000/my-nginx:0.2
+    container_name: my-nginx-app
+    volumes:
+      - app-data:/usr/share/nginx/html
+    ports:
+      - "8081:80"
+    networks:
+      - nginx-network
+    cpu_count: 1
+    cpus: 0.1
+    cpu_percent: 10
+    mem_limit: 50m
+
+
+networks:
+  apache-network:
+  nginx-network:
+
+volumes:
+  app-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device:  ${PWD}/html
